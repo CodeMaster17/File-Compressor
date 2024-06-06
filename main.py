@@ -18,6 +18,7 @@ class Huffmancode:
     def __init__(self, path):
         self.path = path
         self.__heap =[]
+        self.code ={}
 
     def __frequency_from_text(self,text):
         frequency_dict = {}
@@ -45,6 +46,19 @@ class Huffmancode:
             newNode.right = binary_tree_node2
             # heapq.heappush(self.__heap, newNode)
         return
+    
+    def __Build_Tree_Code_Helper(self, root, current_code):
+        if root is None:
+            return
+        if root.value is not None:
+            self.code[root.value] = current_code
+            return
+        self.__Build_Tree_Code_Helper(root.left, current_code + "0")
+        self.__Build_Tree_Code_Helper(root.right, current_code + "1")
+    
+    def __Build_Tree_Code(self):
+        root = heapq.heappop(self.__heap)
+        self.__Build_Tree_Code_Helper(root, "")
 
     def compression(self): 
         # To access the file and extract text from that file
@@ -56,5 +70,6 @@ class Huffmancode:
         # construct binary tree from heap
         self.__Build_Binary_Tree()
         # construct code from binary tree and store it in dictionary
+        self.__Build_Tree_Code()
         # construct encoder text.
         # we have return that binary file as an output
